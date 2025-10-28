@@ -4,7 +4,7 @@ using UnityEngine;
 public class MovementController : MonoBehaviour
 {
     [SerializeField] private Transform _sourceDirection;
-    [SerializeField] private float _speedMovement;
+    [SerializeField] private float _velocityMultiplier;
     [SerializeField] private float _jumpForce;
 
     private string _horizontal = "Horizontal";
@@ -56,13 +56,13 @@ public class MovementController : MonoBehaviour
 
     private void Move(Vector3 direction)
     {
-        _rigidbody.AddForce(_speedMovement * Time.fixedDeltaTime * direction);
+        _rigidbody.AddForce(_velocityMultiplier * direction);
         _isMoving = false;
     }
 
     private void Jump()
     {
-        _rigidbody.AddForce(_jumpForce * Time.fixedDeltaTime * Vector3.up);
+        _rigidbody.AddForce(_jumpForce * Vector3.up);
         _isJumped = false;
     }
 }
