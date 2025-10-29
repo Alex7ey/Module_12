@@ -3,18 +3,19 @@ using UnityEngine;
 public class ProgressManager : MonoBehaviour
 {
     [SerializeField] private float _timeLimit;
-    [SerializeField] private PickupItem[] _gameItems;
+    [SerializeField] private Coin[] _gameItems;
     [SerializeField] private Player _player;
+    [SerializeField] private Wallet _wallet;
 
     private GameTimer _gameTimer;
-    private ItemCounter _itemCounter;
 
     private bool _isRunning = true;
+    private int _coinsQuota;
 
     private void Awake()
     {
         _gameTimer = new(_timeLimit);
-        _itemCounter = new(_gameItems);
+        _coinsQuota = _gameItems.Length;
     }
 
     private void Update()
@@ -24,7 +25,7 @@ public class ProgressManager : MonoBehaviour
             _gameTimer.TimeUpdate();
             ShowProgress();
 
-            if (_itemCounter.IsGameItemsCollected())
+            if (_wallet.GetCoinCount() >= _coinsQuota)
             {
                 WinGame();
                 return;
@@ -44,7 +45,7 @@ public class ProgressManager : MonoBehaviour
 
     private void ShowNumberActiveObjects()
     {
-        Debug.Log($"Осталось собрать {_itemCounter.GetActiveItemsCount()} энергии");
+        Debug.Log($"Осталось собрать {_coinsQuota - _wallet.GetCoinCount()} энергии");
     }
 
     private void ShowProgress()

@@ -1,17 +1,15 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(InputHandler))]
 public class MovementController : MonoBehaviour
 {
     [SerializeField] private Transform _sourceDirection;
     [SerializeField] private float _velocityMultiplier;
     [SerializeField] private float _jumpForce;
 
-    private string _horizontal = "Horizontal";
-    private string _vertical = "Vertical";
-
+    private InputHandler _inputHandler;
     private Rigidbody _rigidbody;
-    private Vector3 _directionMove;
 
     private bool _isMoving;
     private bool _isJumped;
@@ -20,13 +18,12 @@ public class MovementController : MonoBehaviour
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
+        _inputHandler = GetComponent<InputHandler>();
     }
 
     private void Update()
     {
-        _directionMove = new Vector3(Input.GetAxis(_horizontal), 0, Input.GetAxis(_vertical));
-
-        if (_directionMove != Vector3.zero)
+        if (_inputHandler.GetMovementDirection() != Vector3.zero)
             _isMoving = true;
 
         if (Input.GetKeyDown(KeyCode.Space) && _isGrounded)
@@ -36,7 +33,7 @@ public class MovementController : MonoBehaviour
     private void FixedUpdate()
     {
         if (_isMoving)
-            Move(_sourceDirection.transform.TransformDirection(_directionMove));
+            Move(_sourceDirection.transform.TransformDirection(_inputHandler.GetMovementDirection()));
 
         if (_isJumped)
             Jump();
